@@ -15,7 +15,7 @@ async function fetchComics(){
         promiseArray.push(
             fetch('http://xkcd.com/' + Math.floor(Math.random() * 2481 + 1) + '/info.0.json')
                 .then(res=> res.json())
-                .then(res => comics.push(res))
+                .then(res => comics.push({img: res.img, title:res.title}))
                 .catch(err => console.log(err))
         )
     }
