@@ -12,7 +12,7 @@ router.post('/login', async (req,res) => {
         res.sendStatus(401)
     } else {
         if (await authService.validatePassword(req.body.userName,req.body.password)) {
-            const token = authService.getTokenForUser(user.userName)
+            const token = authService.getTokenForUser(user.userName,user.role)
             const payload = {userName: req.body.userName, sessionToken: token}
             res.cookie("authorization",token,{expires: new Date(Number(new Date()) + TEN_YEARS)})
             res.cookie("userName",user.userName)
@@ -36,15 +36,12 @@ router.post('/register', async (req,res) => {
             userName: req.body.userName,
             password: hashedPassword,
             role: req.body.role,
-    
         }
 
         await authService.saveUser(newUser)
         .then(() => {
-            const token = authService.getTokenForUser()
+            const token = authService.getTokenForUser(newUser.userName,newUser.role)
             res.cookie("authorization",token,{expires: new Date(Date.now() + TEN_YEARS)})
-            res.cookie("userName",req.body.userName)
-            res.cookie("role",req.body.role)
             res.json(token)
         })
         .catch(err => {

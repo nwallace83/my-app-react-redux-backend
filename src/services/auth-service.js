@@ -50,9 +50,9 @@ const hashPassword = async (plainTextPassword) => {
     return hashedPassword
 }
 
-const getTokenForUser = (username) => {
+const getTokenForUser = (username,role) => {
     const expireDate = new Date().getTime() + TEN_YEARS
-    return jwt.sign({user: username, role: "user", expiresAt: expireDate},jwtKey,{algorithm: "HS256",expiresIn: TEN_YEARS})
+    return jwt.sign({userName: username, role: role, expiresAt: expireDate},jwtKey,{algorithm: "HS256",expiresIn: TEN_YEARS})
 }
 
 exports.verifyToken = verifyToken
