@@ -4,21 +4,14 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user-model')
 const TEN_YEARS = 315360000000
 
-const verifyToken = (req,res,next) => {
-    const authHeader = req.headers.authorization;
-
-    if (authHeader) {
-        const token = authHeader.split(' ')[1]
-
-        jwt.verify(token,jwtKey,(err,user) => {
-            if (err) {
-                res.sendStatus(401)
-            }
-
-            req.user = user
-        })
-
-        next()
+const getUserFromToken = async (token) => {
+    try {
+        const decodedWebToken = jwt.verify(token,jwtKey)
+        const userName = decodedWebToken.userName
+        const user = await fetchUser(userName)
+        return user;
+    } catch{
+        return null
     }
 }
 
@@ -55,7 +48,7 @@ const getTokenForUser = (username,role) => {
     return jwt.sign({userName: username, role: role, expiresAt: expireDate},jwtKey,{algorithm: "HS256",expiresIn: TEN_YEARS})
 }
 
-exports.verifyToken = verifyToken
+exports.getUserFromToken = getUserFromToken
 exports.getTokenForUser = getTokenForUser
 exports.hashPassword = hashPassword
 exports.fetchUser = fetchUser
