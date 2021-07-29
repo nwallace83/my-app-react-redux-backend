@@ -3,9 +3,14 @@ const router = express.Router()
 const user = require('../models/user-model')
 const adminOnly = require('../middlware/adminOnly')
 
-router.get('/users',adminOnly,async (req,res) => {
-    const users = await user.UserModel.find()
-    res.json(users)
+router.get('/users',adminOnly,(req,res) => {
+    user.UserModel.find()
+    .then(users => {
+        let filteredUsers = users.map(user => {
+            return {userName: user.userName, role: user.role}
+        })
+        res.json(filteredUsers)
+    })
 })
 
 router.delete('/users/:userName',adminOnly,async (req,res) => {
