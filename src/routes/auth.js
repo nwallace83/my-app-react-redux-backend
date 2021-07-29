@@ -15,8 +15,6 @@ router.post('/login', async (req,res) => {
             const token = authService.getTokenForUser(user.userName,user.role)
             const payload = {userName: req.body.userName, sessionToken: token}
             res.cookie("authorization",token,{expires: new Date(Number(new Date()) + TEN_YEARS)})
-            res.cookie("userName",user.userName)
-            res.cookie("role",user.role)
             res.json(payload)
         } else{
             res.status(401).send("invalid password")
