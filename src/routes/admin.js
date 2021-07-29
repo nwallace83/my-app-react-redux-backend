@@ -13,8 +13,8 @@ router.get('/users',adminOnly,(req,res) => {
     })
 })
 
-router.delete('/users/:userName',adminOnly,async (req,res) => {
-    user.UserModel.deleteOne({username: req.params.userName})
+router.delete('/users/:userName',adminOnly,(req,res) => {
+    user.UserModel.deleteOne({userName: req.params.userName})
     .then(() => {
         console.log("Deleted user: " + req.params.userName)
         res.sendStatus(200);

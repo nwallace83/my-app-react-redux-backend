@@ -39,7 +39,7 @@ const validatePassword = async (userName,password) => {
 }
 
 const hashPassword = async (plainTextPassword) => {
-    let hashedPassword = await bcrypt.hash(plainTextPassword,10).then(res => this.hashedPassword = res)
+    let hashedPassword = await bcrypt.hash(plainTextPassword,12).then(res => this.hashedPassword = res)
     return hashedPassword
 }
 
