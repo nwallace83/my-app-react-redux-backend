@@ -5,7 +5,7 @@ const adminOnly = async (req,res,next) => {
         res.status(401).send("Invalid Authorization")
     } else {
         const user = await authService.getUserFromToken(req.cookies.authorization)
-        if (user.role === "ADMIN") {
+        if (user && user.role === "ADMIN") {
             console.log("Valid Admin: " + user.userName + " " + user.role)
             next()
         } else {

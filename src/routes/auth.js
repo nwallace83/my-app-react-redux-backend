@@ -13,7 +13,7 @@ router.post('/login', async (req,res) => {
     } else {
         if (await authService.validatePassword(req.body.userName,req.body.password)) {
             const token = authService.getTokenForUser(user.userName,user.role)
-            const payload = {userName: req.body.userName, sessionToken: token}
+            const payload = {sessionToken: token}
             res.cookie("authorization",token,{expires: new Date(Number(new Date()) + TEN_YEARS)})
             res.json(payload)
         } else{
@@ -51,13 +51,17 @@ router.post('/register', async (req,res) => {
 
 router.get('/',(req,res) => {
 
-    if(!req.cookies.token) {
-        res.status(401).send()
+    if(!req.cookies.authorization) {
+        res.sendStatus(401)
     }
 
-    var payload = jwt.verify(req.cookies.token, jwtKey)
-
-    res.json(payload)
+    try {
+        jwt.verify(req.cookies.authorization, jwtKey)
+        res.sendStatus(200)
+    } catch{
+        console.log("Bad Auth Token " + req.cookies.authorization)
+        res.sendStatus(401)
+    }
 })
 
 module.exports = router;
